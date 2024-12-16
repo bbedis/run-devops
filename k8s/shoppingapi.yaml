@@ -16,25 +16,29 @@ spec:
     spec:
       containers:
         - name: shoppingapi
-          image: mehmetozkaya/shoppingapi:latest
+          image: bbedis/shoppingapi:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
             - name: DatabaseSettings__ConnectionString
               valueFrom:
-                  configMapKeyRef:
-                    name: mongo-configmap
-                    key: connection_string
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: connection_string
+            - name: DatabaseSettings__DatabaseName
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: database_name
+            - name: DatabaseSettings__CollectionName
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: collection_name
+          resources: {}
 ---
 apiVersion: v1
 kind: Service
@@ -47,5 +51,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8000
-      targetPort: 80
+      targetPort: 8080
       nodePort: 31000

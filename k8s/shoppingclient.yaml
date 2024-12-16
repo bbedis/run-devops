@@ -16,25 +16,19 @@ spec:
     spec:
       containers:
         - name: shoppingclient
-          image: mehmetozkaya/shoppingclient:latest
+          image: bbedis/shoppingclient:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
             - name: ShoppingAPIUrl
               valueFrom:
-                  configMapKeyRef:
-                    name: shoppingapi-configmap
-                    key: shoppingapi_url
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+                configMapKeyRef:
+                  name: shoppingapi-configmap
+                  key: shoppingapi_url
+          resources: {}
 ---
 apiVersion: v1
 kind: Service
@@ -47,5 +41,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8001
-      targetPort: 80
+      targetPort: 8080
       nodePort: 30000

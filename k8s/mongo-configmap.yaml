@@ -4,3 +4,5 @@ metadata:
   name: mongo-configmap
 data:
   connection_string: mongodb://username:password@mongo-service:27017
+  database_name: ProductDb
+  collection_name: Products
